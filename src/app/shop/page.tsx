@@ -15,7 +15,7 @@ export default function ShopPage() {
             </h1>
             <p className="mt-4 max-w-2xl text-lg text-slate-300">
               Browse our complete range of premium fragrances, diffusers,
-              candles, and oils. Every product is crafted for luxury and
+              Scented Candles, and oils. Every product is crafted for luxury and
               elegance.
             </p>
           </div>

@@ -7,7 +7,7 @@ const features = [
   {
     title: "Scented spaces",
     description:
-      "Luxury diffusers and candles created to elevate your home, office, and car with a refined fragrance experience.",
+      "Luxury diffusers and Scented Candles created to elevate your home, office, and car with a refined fragrance experience.",
   },
   {
     title: "Custom and wholesale",

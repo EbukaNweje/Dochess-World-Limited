@@ -86,9 +86,11 @@ export default function ContactPage() {
 
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
                   <h4 className="font-semibold text-[#d6ab6b]">Email</h4>
-                  <p className="mt-2 text-slate-300">hello@dochessworld.com</p>
+                  <p className="mt-2 text-slate-300">
+                    dochessworldlimited@gmail.com
+                  </p>
                   <a
-                    href="mailto:hello@dochessworld.com"
+                    href="mailto:dochessworldlimited@gmail.com"
                     className="mt-3 inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-6 py-2 text-sm font-semibold text-white transition hover:border-white/20"
                   >
                     Send Email

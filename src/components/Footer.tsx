@@ -56,12 +56,12 @@ export default function Footer() {
               </li>
               <li>
                 <a href="#" className="transition hover:text-[#d6ab6b]">
-                  Candles
+                  Scented Candles
                 </a>
               </li>
               <li>
                 <a href="#" className="transition hover:text-[#d6ab6b]">
-                  Raw Oils
+                  Raw Perfume Oils
                 </a>
               </li>
             </ul>
@@ -82,7 +82,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="mailto:hello@dochessworld.com"
+                  href="mailto:dochessworldlimited@gmail.com"
                   className="transition hover:text-[#d6ab6b]"
                 >
                   Email

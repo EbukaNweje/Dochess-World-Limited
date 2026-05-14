@@ -23,12 +23,17 @@ const categories = [
     ],
   },
   {
-    name: "Candles",
-    description: "Hand-poured scented candles for ambiance",
-    items: ["Home Candles", "Luxury Candles", "Travel Candles", "Gift Sets"],
+    name: "Scented Candles",
+    description: "Hand-poured scented Scented Candles for ambiance",
+    items: [
+      "Home Scented Candles",
+      "Luxury Scented Candles",
+      "Travel Scented Candles",
+      "Gift Sets",
+    ],
   },
   {
-    name: "Raw Oils",
+    name: "Raw Perfume Oils",
     description: "Pure concentrated fragrance oils",
     items: ["3ml Vials", "5ml Bottles", "50ml Bottles", "Bulk Oils (500ml+)"],
   },

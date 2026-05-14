@@ -35,12 +35,12 @@ export default function AboutPage() {
               </h2>
               <p className="mt-4 text-base leading-8 text-slate-300">
                 We specialize in crafting premium perfumes, luxury diffusers,
-                scented candles, and 100% raw oil fragrances. From intimate 3ml
-                personal vials to industrial 5kg bottles, we cater to individual
-                enthusiasts, retailers, and wholesale partners alike. Every
-                product is created with carefully selected, premium-quality
-                ingredients to deliver long-lasting freshness, rich aroma
-                projection, and an unforgettable luxury experience.
+                scented Scented Candles, and 100% raw oil fragrances. From
+                intimate 3ml personal vials to industrial 5kg bottles, we cater
+                to individual enthusiasts, retailers, and wholesale partners
+                alike. Every product is created with carefully selected,
+                premium-quality ingredients to deliver long-lasting freshness,
+                rich aroma projection, and an unforgettable luxury experience.
               </p>
 
               <h2 className="mt-12 text-3xl font-bold text-white">
@@ -67,11 +67,11 @@ export default function AboutPage() {
                 </div>
                 <div className="rounded-xl border border-white/10 bg-white/5 p-6">
                   <h3 className="font-semibold text-[#d6ab6b]">
-                    Scented Candles
+                    Scented Scented Candles
                   </h3>
                   <p className="mt-2 text-sm text-slate-300">
-                    Hand-poured candles with premium wax and natural fragrance
-                    oils for ambient luxury.
+                    Hand-poured Scented Candles with premium wax and natural
+                    fragrance oils for ambient luxury.
                   </p>
                 </div>
                 <div className="rounded-xl border border-white/10 bg-white/5 p-6">

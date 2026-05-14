@@ -75,8 +75,8 @@ export default function ProductListing() {
             Explore our premium fragrances.
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-slate-300">
-            Handpicked perfumes, diffusers, and candles crafted for luxury and
-            elegance.
+            Handpicked perfumes, diffusers, and Scented Candles crafted for
+            luxury and elegance.
           </p>
         </div>
 
