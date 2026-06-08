@@ -43,7 +43,7 @@ const page = () => {
               </div>
             </div>
 
-            <div className="rounded-[2rem] bg-white/5 p-8 ring-1 ring-white/10 sm:p-12">
+            <div className="rounded-4xl bg-white/5 p-8 ring-1 ring-white/10 sm:p-12">
               <div className="space-y-6">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-[0.35em] text-[#d6ab6b]">
