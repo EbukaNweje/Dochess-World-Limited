@@ -18,7 +18,18 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.## Deployment notes
+
+The hosted site will only show products when the same MongoDB and admin variables are configured in your hosting platform.
+
+Set these in Vercel (Project Settings → Environment Variables):
+
+- `MONGODB_URI`
+- `NEXT_PUBLIC_ADMIN_USERNAME`
+- `NEXT_PUBLIC_ADMIN_PASSWORD`
+- `NEXT_PUBLIC_STORAGE_KEY`
+
+After adding them, redeploy the project.
 
 ## Learn More
 

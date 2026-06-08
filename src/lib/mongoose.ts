@@ -5,8 +5,7 @@ type MongooseCache = {
   promise: Promise<typeof mongoose> | null;
 };
 
-const MONGODB_URI =
-  process.env.MONGODB_URI ?? "mongodb://127.0.0.1:27017/dochess";
+const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
   throw new Error(
@@ -26,6 +25,10 @@ let cached: MongooseCache = globalWithCache._mongoose ?? {
 if (!globalWithCache._mongoose) globalWithCache._mongoose = cached;
 
 export async function connect() {
+  if (!MONGODB_URI) {
+    throw new Error("Missing MONGODB_URI environment variable.");
+  }
+
   if (cached.conn) return cached.conn;
 
   if (!cached.promise) {

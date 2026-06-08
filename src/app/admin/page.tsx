@@ -6,7 +6,7 @@ type Product = {
   _id?: string;
   name: string;
   description?: string;
-  price: number;
+  price: number | "";
   imageUrl?: string;
 };
 
@@ -42,7 +42,7 @@ export default function AdminPage() {
   const [form, setForm] = useState<Product>({
     name: "",
     description: "",
-    price: 0,
+    price: "",
     imageUrl: "",
   });
   const [selectedImageName, setSelectedImageName] = useState<string>("");
@@ -106,9 +106,15 @@ export default function AdminPage() {
     setLoggedIn(false);
     setProducts([]);
     setEditingId(null);
-    setForm({ name: "", description: "", price: 0, imageUrl: "" });
+    setForm({ name: "", description: "", price: "", imageUrl: "" });
     setSelectedImageName("");
     setError(null);
+  }
+
+  function normalizePrice(value: number | "") {
+    if (value === "") return 0;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : 0;
   }
 
   async function createProduct(e: React.FormEvent) {
@@ -116,14 +122,18 @@ export default function AdminPage() {
     setError(null);
     try {
       if (editingId) return await updateProduct();
+      const payload = {
+        ...form,
+        price: normalizePrice(form.price),
+      };
       const res = await fetch("/api/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("Failed to create product");
       await res.json();
-      setForm({ name: "", description: "", price: 0, imageUrl: "" });
+      setForm({ name: "", description: "", price: "", imageUrl: "" });
       setSelectedImageName("");
       await fetchProducts();
     } catch (err) {
@@ -156,15 +166,20 @@ export default function AdminPage() {
     if (!editingId) return;
     setError(null);
     try {
+      const payload = {
+        id: editingId,
+        ...form,
+        price: normalizePrice(form.price),
+      };
       const res = await fetch("/api/products", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: editingId, ...form }),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("Failed to update product");
       await res.json();
       setEditingId(null);
-      setForm({ name: "", description: "", price: 0, imageUrl: "" });
+      setForm({ name: "", description: "", price: "", imageUrl: "" });
       setSelectedImageName("");
       await fetchProducts();
     } catch (err) {
@@ -404,10 +419,15 @@ export default function AdminPage() {
                 fontSize: 16,
               }}
               type="number"
-              placeholder="Price"
+              min="0"
+              step="0.01"
+              placeholder="Enter price"
               value={form.price}
               onChange={(e) =>
-                setForm({ ...form, price: Number(e.target.value) })
+                setForm({
+                  ...form,
+                  price: e.target.value === "" ? "" : Number(e.target.value),
+                })
               }
               required
             />
@@ -494,7 +514,7 @@ export default function AdminPage() {
                   setForm({
                     name: "",
                     description: "",
-                    price: 0,
+                    price: "",
                     imageUrl: "",
                   });
                   setSelectedImageName("");

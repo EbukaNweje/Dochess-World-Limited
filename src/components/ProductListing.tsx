@@ -39,7 +39,11 @@ export default function ProductListing() {
   }, []);
 
   const handleBuyNow = (product: Product) => {
-    const priceText = product.price ? `₦${product.price}` : "price available";
+    const priceValue = Number(product.price ?? 0);
+    const priceText =
+      Number.isFinite(priceValue) && priceValue >= 0
+        ? `₦${priceValue}`
+        : "price available";
     const message = `Hi! I'm interested in buying *${product.name}* (${priceText}). Can you provide more details?`;
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
       message,
@@ -104,7 +108,9 @@ export default function ProductListing() {
                   </p>
                   <div className="mt-6 flex items-center justify-between">
                     <span className="text-xl font-bold text-[#e5c185]">
-                      {product.price ? `₦${product.price}` : "Contact us"}
+                      {Number.isFinite(Number(product.price))
+                        ? `₦${Number(product.price)}`
+                        : "Contact us"}
                     </span>
                     <button
                       onClick={() => handleBuyNow(product)}
