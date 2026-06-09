@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 type Product = {
   _id?: string;
@@ -48,7 +48,12 @@ export default function AdminPage() {
   const [selectedImageName, setSelectedImageName] = useState<string>("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [loginForm, setLoginForm] = useState<LoginForm>({
     username: "",
@@ -102,13 +107,22 @@ export default function AdminPage() {
     setError("Incorrect username or password.");
   }
 
+  function resetForm() {
+    setForm({ name: "", description: "", price: "", imageUrl: "" });
+    setSelectedImageName("");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }
+
   function handleLogout() {
     setLoggedIn(false);
     setProducts([]);
     setEditingId(null);
-    setForm({ name: "", description: "", price: "", imageUrl: "" });
-    setSelectedImageName("");
+    resetForm();
     setError(null);
+    setSuccessMessage(null);
+    setShowSuccessModal(false);
   }
 
   function normalizePrice(value: number | "") {
@@ -120,6 +134,8 @@ export default function AdminPage() {
   async function createProduct(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    setSuccessMessage(null);
+    setIsSubmitting(true);
     try {
       if (editingId) return await updateProduct();
       const payload = {
@@ -133,22 +149,35 @@ export default function AdminPage() {
       });
       if (!res.ok) throw new Error("Failed to create product");
       await res.json();
-      setForm({ name: "", description: "", price: "", imageUrl: "" });
-      setSelectedImageName("");
+      setSuccessMessage("Product created successfully.");
+      setShowSuccessModal(true);
+      resetForm();
       await fetchProducts();
     } catch (err) {
       setError((err as Error).message);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
   async function deleteProduct(id: string) {
+    if (!window.confirm("Are you sure you want to delete this product?")) {
+      return;
+    }
+
     setError(null);
+    setSuccessMessage(null);
+    setDeletingId(id);
     try {
       const res = await fetch(`/api/products?id=${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete product");
+      setSuccessMessage("Product deleted successfully.");
+      setShowSuccessModal(true);
       await fetchProducts();
     } catch (err) {
       setError((err as Error).message);
+    } finally {
+      setDeletingId(null);
     }
   }
 
@@ -165,6 +194,8 @@ export default function AdminPage() {
   async function updateProduct() {
     if (!editingId) return;
     setError(null);
+    setSuccessMessage(null);
+    setIsSubmitting(true);
     try {
       const payload = {
         id: editingId,
@@ -178,12 +209,15 @@ export default function AdminPage() {
       });
       if (!res.ok) throw new Error("Failed to update product");
       await res.json();
+      setSuccessMessage("Product updated successfully.");
+      setShowSuccessModal(true);
       setEditingId(null);
-      setForm({ name: "", description: "", price: "", imageUrl: "" });
-      setSelectedImageName("");
+      resetForm();
       await fetchProducts();
     } catch (err) {
       setError((err as Error).message);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -357,6 +391,60 @@ export default function AdminPage() {
             {error}
           </div>
         )}
+        {showSuccessModal && successMessage && (
+          <div
+            style={{
+              position: "fixed",
+              inset: 0,
+              background: "rgba(15, 23, 42, 0.45)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 1000,
+              padding: 16,
+            }}
+          >
+            <div
+              style={{
+                width: "100%",
+                maxWidth: 420,
+                background: "#fff",
+                borderRadius: 18,
+                boxShadow: "0 18px 50px rgba(15, 23, 42, 0.25)",
+                padding: 24,
+              }}
+            >
+              <p
+                style={{
+                  margin: "0 0 8px",
+                  fontSize: 18,
+                  fontWeight: 700,
+                  color: "#111827",
+                }}
+              >
+                Success
+              </p>
+              <p style={{ margin: "0 0 18px", color: "#374151" }}>
+                {successMessage}
+              </p>
+              <button
+                type="button"
+                onClick={() => setShowSuccessModal(false)}
+                style={{
+                  padding: "10px 16px",
+                  borderRadius: 10,
+                  border: "none",
+                  background: "#0f172a",
+                  color: "#fff",
+                  cursor: "pointer",
+                  fontWeight: 700,
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
 
         <form
           onSubmit={createProduct}
@@ -436,6 +524,7 @@ export default function AdminPage() {
           <div style={{ display: "grid", gap: 8 }}>
             <label style={{ fontWeight: 600 }}>Product Image File</label>
             <input
+              ref={fileInputRef}
               type="file"
               accept="image/*"
               style={{
@@ -484,18 +573,23 @@ export default function AdminPage() {
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             <button
               type="submit"
+              disabled={isSubmitting}
               style={{
                 padding: "12px 20px",
                 minWidth: 150,
                 borderRadius: 10,
                 border: "none",
-                background: "#0f172a",
+                background: isSubmitting ? "#475569" : "#0f172a",
                 color: "#fff",
-                cursor: "pointer",
+                cursor: isSubmitting ? "not-allowed" : "pointer",
                 fontWeight: 700,
               }}
             >
-              {editingId ? "Update" : "Create"} Product
+              {isSubmitting
+                ? editingId
+                  ? "Updating Product..."
+                  : "Creating Product..."
+                : `${editingId ? "Update" : "Create"} Product`}
             </button>
             {editingId && (
               <button
@@ -511,13 +605,7 @@ export default function AdminPage() {
                 }}
                 onClick={() => {
                   setEditingId(null);
-                  setForm({
-                    name: "",
-                    description: "",
-                    price: "",
-                    imageUrl: "",
-                  });
-                  setSelectedImageName("");
+                  resetForm();
                 }}
               >
                 Cancel
@@ -629,17 +717,20 @@ export default function AdminPage() {
                           Edit
                         </button>
                         <button
+                          disabled={deletingId === p._id}
                           style={{
                             padding: "8px 14px",
                             borderRadius: 8,
                             border: "1px solid #ef4444",
-                            background: "#fff",
-                            color: "#b91c1c",
-                            cursor: "pointer",
+                            background:
+                              deletingId === p._id ? "#fee2e2" : "#fff",
+                            color: deletingId === p._id ? "#991b1b" : "#b91c1c",
+                            cursor:
+                              deletingId === p._id ? "not-allowed" : "pointer",
                           }}
                           onClick={() => p._id && deleteProduct(p._id)}
                         >
-                          Delete
+                          {deletingId === p._id ? "Deleting..." : "Delete"}
                         </button>
                       </td>
                     </tr>
